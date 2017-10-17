@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Parameters>
+	<Settings>
+		<set id="LocalFolder">
+			<!-- Select local folder -->
+			<folder>/home/path/LISSI/run</folder>
+		</set>
+		<!-- For more information on accessing NCBI through FTP :
+		http://www.ncbi.nlm.nih.gov/projects/Sequin/download/ftp_example.html  -->
+		<set id="Server">
+		<!-- Your email address -->
+			<password>your@email.com</password>
+		</set>
+		<set id="Blast">
+			<!-- Set BLAST binaries folder -->
+			<folder>/usr/bin/</folder>
+		</set>
+		<set id="R">
+			<!-- Set R binaries folder -->
+			<folder>/usr/bin/</folder>
+		</set>
+	</Settings>
+</Parameters>

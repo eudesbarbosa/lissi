@@ -1,8 +1,21 @@
-/**
+/*
+ *            	Life-Style-Specific-Islands
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public License.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *      
+ * This material was developed as part of a research project at 
+ * the University of Southern Denmark (SDU - Odense, Denmark) 
+ * and the Federal University of Minas Gerais (UFMG - Belo 
+ * Horizonte, Brazil). For more information please access:
  * 
+ *      	https://lissi.compbio.sdu.dk/ 
  */
 package dk.sdu.imada.gui.genome;
-
 
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -21,7 +34,6 @@ import javax.swing.event.DocumentListener;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import dk.sdu.imada.gui.AbstractPanel;
 import dk.sdu.imada.methods.genome.DownloadGenomeList;
 import dk.sdu.imada.methods.genome.ParseLocalGenomes;
 
@@ -34,7 +46,7 @@ import net.miginfocom.swing.MigLayout;
  * at GenBank.
  * <br>
  * FOLDER ICON (INFO) <br>
- * Artist: Hamza Saleem (Available for custom work) <br>
+ * Artist: Hamza Saleem <br>
  * License: Free for non-commercial use. <br>
  * Commercial usage: Not allowed <br>
  * http://www.iconarchive.com/show/stock-folder-style-2-icons-by-hamzasaleem/Folder-Plain-icon.html <br>
@@ -49,7 +61,10 @@ final public class GenomeLoader extends AbstractGenomeLoader {
 	
 	private static final Logger logger = LogManager.getLogger(GenomeLoader.class);
 
-	/***/
+	/** 
+	 * Boolean flag indicates if user wants to download files 
+	 * from NCBI. 
+	 */
 	protected static boolean genomeListDownloaded = false;
 
 	//------  Declaration end  ------//
@@ -88,8 +103,8 @@ final public class GenomeLoader extends AbstractGenomeLoader {
 
 	@Override
 	protected void initComponents() {
-
 		// Configure main components
+		
 		// Create check button (download list from NCBI)
 		downloadList = new JRadioButton("Download list from GenBank");
 		downloadList.setMnemonic(KeyEvent.VK_C); 
@@ -219,7 +234,7 @@ final public class GenomeLoader extends AbstractGenomeLoader {
 						lifestyle.setText(file.getAbsolutePath());
 					}
 				}
-			}); //end-actionlistener
+			}); //end-ActionListener
 		}
 	}
 
@@ -317,7 +332,7 @@ final public class GenomeLoader extends AbstractGenomeLoader {
 						}
 					}
 				}
-			}); // end actionlistener
+			}); //end-ActionListener
 		}
 	}
 }

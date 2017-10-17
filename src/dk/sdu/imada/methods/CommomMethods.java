@@ -28,6 +28,8 @@ import org.apache.logging.log4j.LogManager;
 import com.enterprisedt.net.ftp.FTPException;
 import com.enterprisedt.net.ftp.FileTransferClient;
 
+import dk.sdu.imada.gui.MainFrame;
+
 
 
 /**
@@ -41,10 +43,10 @@ public class CommomMethods {
 	//------  Variable declaration  ------//
 
 	private static final Logger logger = LogManager.getLogger(CommomMethods.class.getName());
-	
+
 	/** NCBI ftp default user, 'anonymous'. */
 	protected static final String user = "anonymous";
-	
+
 	/** NBI ftp host address. */
 	protected static final String host = "ftp.ncbi.nlm.nih.gov";
 
@@ -86,18 +88,18 @@ public class CommomMethods {
 
 
 	/**
-	 * Configures a FTPClient based on the settings found in the 
-	 * configuration file. 
-	 *
-	 * @param pwd	Password to NCBI connection (valid email address).
-	 * @return	Returns an FTPClient object. FTPClient specific for NCBI 
+	 * @return	Returns an FTPClient object based on the settings 
+	 * found in the configuration file. FTPClient specific for NCBI 
 	 * and anonymous use.
 	 * 
 	 * @throws FTPException
 	 * @throws IOException
 	 */
-	public static FileTransferClient CreateFTPClient(String pwd) 
+	public static FileTransferClient CreateFTPClient() 
 			throws FTPException, IOException {
+		// @param pwd	Password to NCBI connection (valid email address).
+		// NCBI FTP password : user email
+		String pwd = MainFrame.getGlobalParameters().getEmail();
 		// Validate input
 		if (pwd.equals("")) {
 			logger.error("FTP file transfer failed. Please provided "
@@ -122,7 +124,7 @@ public class CommomMethods {
 	 * possible to send the message. This is necessary due to the fact that 
 	 * loading the graphical part is usually faster than parsing the 
 	 * configuration file. 
-	
+
 	public static void notifyProgressBar(){
 		try {		    
 			Thread.sleep(100);
@@ -135,5 +137,5 @@ public class CommomMethods {
 			ie.printStackTrace();
 		}
 	} 
-	*/
+	 */
 }
