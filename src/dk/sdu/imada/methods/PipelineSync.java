@@ -12,10 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import dk.sdu.imada.gui.CreateAccordionMenu;
 import dk.sdu.imada.gui.CreateMultiSplitPane;
+import dk.sdu.imada.gui.MainFrame;
 import dk.sdu.imada.gui.ParametersPanel;
 import dk.sdu.imada.gui.ProgressPanel;
 import dk.sdu.imada.gui.WizardPanel;
@@ -50,30 +52,61 @@ import dk.sdu.imada.methods.transclust.TransClust;
  * order (islands); and iii), attempts to find the most 
  * discriminant islands for each lifestyle.
  * 
- * @author Eudes Barbosa (eudes@imada.sdu.dk)
+ * @author Eudes Barbosa
  */
 public class PipelineSync implements Command, Cancelled {
 
-	static Logger logger = Logger.getLogger(PipelineSync.class);
+	//------  Variable declaration  ------//
+	
+	private static final Logger logger = LogManager.getLogger(PipelineSync.class.getName());
 
-	// Variable declaration
+	/** Queue executor for external services. */
 	public static ExecutorQueueService queueExecutorExternalServices =
 			new ExecutorQueueService();
+	
 	protected static boolean downloadComplete = false;
 	protected static boolean processInterrupted;
 	protected boolean runGecko = false;
 	protected static SwingWorker<Void, Void> worker = null;
+	
+	/** Genome parser process. */
 	protected GenomeParser parseG = null;
-	protected ParseTransClustResults parseTC = null;
-	protected RunTransClust clust = null;
+	
+	/** TransClust (homology detection) process. */
+	protected RunTransClust clust = null;	
+	
+	/** Gecko (island detection) process. */
 	protected RunGecko gecko = null;
+	
+	/** Random Forest process. */
 	protected RunRandomForest learning = null;
+	
+	/** 
+	 * Object containing all the required Transitivity 
+	 * Clustering parameters (Homology detection). 
+	 */				
 	protected TransClust t = null;
+	
+	/** 
+	 * Object containing all the required Gecko 
+	 * parameters (island detection).
+	 */
 	protected Gecko g = null;
+	
+	/** 
+	 * Object containing all the required Random 
+	 * Forest parameters. 
+	 */
 	protected RandomForest rf = null;
+	
+	
 	protected static List<Genome> genomes = new ArrayList<Genome>();
 	protected static ArrayList<String> clusters = new ArrayList<String>();
-	// Declaration end
+	
+	//protected ParseTransClustResults parseTC = null;
+
+
+	//------  Declaration end  ------//
 
 
 	/**
@@ -130,7 +163,7 @@ public class PipelineSync implements Command, Cancelled {
 		CreateAccordionMenu.addResultInnerBar();
 
 		// Clean previous results (if any)
-		CommomStaticMethods.cleanDirectories();
+		CommomMethods.cleanDirectories();
 		
 		// Global pipeline
 		// Create inner class to run tasks in the background

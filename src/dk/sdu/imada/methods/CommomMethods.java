@@ -53,12 +53,9 @@ public class CommomMethods {
 	//------  Declaration end  ------//
 
 
-	/** 
-	 * Removes previously created files. 
-	 * @param localDir	Path to local working directory.
-	 */
-	public static void cleanDirectories(String localDir) {
-		//String localDir = getLocalDirectory();
+	/** Removes previously created directories. */
+	public static void cleanDirectories() {
+		String localDir = MainFrame.getGlobalParameters().getLocalDir();
 		File directory = null;
 		try {
 			// Clean TransClust folder
