@@ -76,7 +76,7 @@ final public class GenomeSelection extends AbstractGenomeSelection {
 
 	@Override
 	protected void initComponents() {
-		// Create and configure itens associated with 'Available Genomes'
+		// Create and configure items associated with 'Available Genomes'
 		configureAvailableGenomesComponents();
 		// Create and configure 'Lifestyle One' table
 		genomeLifestyleOne = new CreateGenomeTable("lifestyle");

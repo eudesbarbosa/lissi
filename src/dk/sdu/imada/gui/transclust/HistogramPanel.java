@@ -230,7 +230,7 @@ public class HistogramPanel extends JPanel {
 	private int getNumberOfOrganisms() {
 		// TODO: Species under analysis - make it less naïve 
 		// Get all organisms definition (names)
-		List<Genome> organism = ExecutePipeline.getGenomes();
+		List<Genome> organism = PipelineSync.getGenomes();
 		Set<String> distincSpecies = new LinkedHashSet<String>();
 		// Verify unique species (equal first two names)
 		for(Genome org : organism){

@@ -15,7 +15,7 @@
  * 
  *      	https://lissi.compbio.sdu.dk/ 
 */
-package dk.sdu.imada.view.transclust;
+package dk.sdu.imada.gui.transclust;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,7 +147,7 @@ public class ViewResults implements Command {
 	
 	
 	/** 
-	 * [Test method] Prints occurrences. 
+	 * Test method - prints occurrences. 
 	 * @param occur	Occurrences.
 	 */
 	@SuppressWarnings("unused")

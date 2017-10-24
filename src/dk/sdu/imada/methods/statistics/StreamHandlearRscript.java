@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import dk.sdu.imada.methods.PipelineSync;
 import dk.sdu.imada.methods.StreamHandlear;
 
 /**
@@ -57,7 +56,8 @@ public class StreamHandlearRscript extends StreamHandlear {
 				if (line.toLowerCase().contains("execution halted")) {
 					// Inform error and cancel process
 					RunRandomForest.error();
-					PipelineSync.cancelled();
+					// TODO: Include routine to stop whole pipeline from StreamHandlearR.
+					//PipelineSync.cancelled();
 				}
 				// Pass R messages to log
 				if (line.contains("[R]")){

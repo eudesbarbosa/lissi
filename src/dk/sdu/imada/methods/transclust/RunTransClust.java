@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
 import dk.sdu.imada.methods.BrokePipelineException;
 import dk.sdu.imada.methods.Cancelled;
 import dk.sdu.imada.methods.Command;
-import dk.sdu.imada.view.transclust.ViewResults;
+import dk.sdu.imada.gui.transclust.ViewResults;
 
 
 /**

@@ -1,3 +1,8 @@
+**NOTE:** This version of the code is currently under review. For the last
+working version please access LiSSI's [website](https://lissi.compbio.sdu.dk/).
+
+---
+
 # What is LiSSI?
 
 LiSSI stands for LifeStyle-Specific-Islands; and it is a bioinformatic tool
@@ -12,9 +17,6 @@ species of one of the two sets may remain undetected.
 
 
 ### Quick start
-**[NOTE]** This version of the code is currently under review. For the last 
-working version please access LiSSI's [website](https://lissi.compbio.sdu.dk/). 
-
 
 Modify 'lissi-conf.xml' to contain your own paths. On the terminal use the
 following code to start LiSSI:
@@ -23,10 +25,8 @@ java -jar LiSSI_v1.0.jar -c lissi-conf.xml
 ```
 ### Links
 - [Paper](https://doi.org/10.1515/jib-2017-0010)
-- [(GUI) Tutorial]
-(https://lissi.compbio.sdu.dk/tutorial.html)
-- [On the news]
-(http://sciencediscoveries.degruyter.com/exploring-genetic-background-bacterial-lifestyles-lissi/)
+- [Tutorial](https://lissi.compbio.sdu.dk/tutorial.html)
+- [On the news](http://sciencediscoveries.degruyter.com/exploring-genetic-background-bacterial-lifestyles-lissi/)
 
 ---
 

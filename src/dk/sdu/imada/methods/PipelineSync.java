@@ -480,6 +480,8 @@ public class PipelineSync implements Command, Cancelled {
 		return processInterrupted;
 	}
 
+	
+	
 	/**
 	 * Clean up the database before closing 
 	 * the application.

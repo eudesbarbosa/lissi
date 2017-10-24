@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import dk.sdu.imada.gui.gecko.GeckoPanel;
 import dk.sdu.imada.gui.statistics.RandomForestPanel;
 import dk.sdu.imada.gui.transclust.TransClustPanel;
-import dk.sdu.imada.methods.CommomStaticMethods;
 import dk.sdu.imada.methods.PipelineSync;
 import dk.sdu.imada.methods.gecko.Gecko;
 import dk.sdu.imada.methods.statistics.RandomForest;
@@ -47,13 +46,15 @@ import net.miginfocom.swing.MigLayout;
  * Link: http://www.iconarchive.com/show/vista-multimedia-icons-by-icons-land/ <br>
  * License: Free for non-commercial use.
  * 
- * @author Eudes Barbosa (eudes@imada.sdu.dk)
+ * @author Eudes Barbosa
  */
 final public class ParametersPanel extends AbstractParameterPanel {
 
+	//------  Variable declaration  ------//
+
 	private static final long serialVersionUID = -959500439244225732L;
 
-	// Variable declaration
+	
 	protected static JPanel transclust;
 	protected static JPanel gecko;
 	protected static JPanel randomforest;
@@ -65,30 +66,17 @@ final public class ParametersPanel extends AbstractParameterPanel {
 	protected static JComboBox<String> jComboTempDir;
 	protected static JTextField dirTextField;
 	protected static PipelineSync run = null;
-	protected String tmpDir;
-	protected String sysTempDir;
-	// Declaration end
+	
+	//------  Declaration end  ------//
 
 	/**
-	 * Configures panels associated with the differerent 
+	 * Configures panels associated with the different 
 	 * modules of the application: Evolutionary Sequence Analysis 
 	 * (Transitivity Clustering); Island Detection (Gecko); and 
 	 * Statistical Learning Methods (Random Forest). It allows 
 	 * user to specify all parameters necessary to run LiSSI.
 	 */
-	public ParametersPanel(){
-		// Set user's temporary directory		
-		String s = CommomStaticMethods.getLocalDirectory();
-		if (s.substring(s.length() - 1).equals(File.separator)) {
-			this.tmpDir = CommomStaticMethods.getLocalDirectory()
-					.concat("tmp");
-		} else {
-			this.tmpDir = CommomStaticMethods.getLocalDirectory()
-					.concat(File.separator).concat("tmp");
-		}		
-		// Set System default temporary directory
-		sysTempDir = System.getProperty("java.io.tmpdir");
-
+	public ParametersPanel() {
 		// Create and configure panel components
 		initComponents();
 		configureLayout();
@@ -144,7 +132,7 @@ final public class ParametersPanel extends AbstractParameterPanel {
 		// Configure JTextField associated with temporary dir
 		dirTextField = new JTextField(30);
 		dirTextField.setEnabled(false);
-		dirTextField.setText(tmpDir);
+		//dirTextField.setText(tmpDir);
 
 		// Create the combo box
 		final String[] filterStrings = {"User Default", "System Default", "Other" };
@@ -156,11 +144,15 @@ final public class ParametersPanel extends AbstractParameterPanel {
 				if (jComboTempDir.getSelectedItem().equals("User Default")) {
 					jButtonFolder.setEnabled(false);
 					dirTextField.setEnabled(false);
-					dirTextField.setText(tmpDir);
+					// Set Local temporary directory
+					String userTmpDir = MainFrame.getGlobalParameters().getLocalDir()
+							.concat(File.separator).concat("tmp");
+							dirTextField.setText(userTmpDir);
 				} else if (jComboTempDir.getSelectedItem().equals("System Default")) {
 					jButtonFolder.setEnabled(false);
 					dirTextField.setEnabled(false);
-					dirTextField.setText(sysTempDir);
+					// Set System default temporary directory
+					dirTextField.setText(System.getProperty("java.io.tmpdir"));
 				} else if (jComboTempDir.getSelectedItem().equals("Other")) {
 					jButtonFolder.setEnabled(true);
 					dirTextField.setEnabled(true);
