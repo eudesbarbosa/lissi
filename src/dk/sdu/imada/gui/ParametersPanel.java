@@ -419,7 +419,7 @@ final public class ParametersPanel extends AbstractParameterPanel {
 			addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-					// TODO: essa porra toda que é a Baehêa
+					// TODO: Essa porra toda que é a Baehêa, mim beija.
 
 				}
 			});

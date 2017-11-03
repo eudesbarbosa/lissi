@@ -17,13 +17,10 @@
 */
 package dk.sdu.imada.methods.genome;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-//import org.apache.logging.log4j.Logger;
-//import org.apache.logging.log4j.LogManager;
+import javax.swing.table.DefaultTableModel;
 
 import dk.sdu.imada.methods.BrokePipelineException;
 import dk.sdu.imada.methods.Cancelled;
@@ -65,8 +62,8 @@ public class GenomeWithTransClustParser extends GenomeParser implements Command,
 	 * @param processors		Number of available processors 
 	 * @param localDir			Path to local working directory.
 	 */
-	public GenomeWithTransClustParser(Map<String, File> genomesL1, String nameL1, 
-			Map<String, File> genomesL2, String nameL2, String transclustFile,
+	public GenomeWithTransClustParser(DefaultTableModel genomesL1, String nameL1, 
+			DefaultTableModel genomesL2, String nameL2, String transclustFile,
 			String localDir, int processors) {
 		//
 		super(genomesL1, nameL1, genomesL2, nameL2, localDir, processors);
@@ -87,8 +84,8 @@ public class GenomeWithTransClustParser extends GenomeParser implements Command,
 	 * @param processors		Number of available processors 
 	 * @param localDir			Path to local working directory.
 	 */
-	public GenomeWithTransClustParser(Map<String, File> genomesL1, String nameL1, 
-			Map<String, File> genomesL2, String nameL2, ArrayList<String> clusters,
+	public GenomeWithTransClustParser(DefaultTableModel genomesL1, String nameL1, 
+			DefaultTableModel genomesL2, String nameL2, ArrayList<String> clusters,
 			String localDir, int processors) {
 		//
 		super(genomesL1, nameL1, genomesL2, nameL2, localDir, processors);

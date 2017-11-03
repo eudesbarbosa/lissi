@@ -57,52 +57,56 @@ import dk.sdu.imada.methods.transclust.TransClust;
 public class PipelineSync implements Command, Cancelled {
 
 	//------  Variable declaration  ------//
-	
+
 	private static final Logger logger = LogManager.getLogger(PipelineSync.class.getName());
 
 	/** Queue executor for external services. */
 	public static ExecutorQueueService queueExecutorExternalServices =
 			new ExecutorQueueService();
-	
+
 	protected static boolean downloadComplete = false;
 	protected static boolean processInterrupted;
 	protected boolean runGecko = false;
 	protected static SwingWorker<Void, Void> worker = null;
-	
+
 	/** Genome parser process. */
 	protected GenomeParser parseG = null;
-	
+
 	/** TransClust (homology detection) process. */
 	protected RunTransClust clust = null;	
-	
+
 	/** Gecko (island detection) process. */
 	protected RunGecko gecko = null;
-	
+
 	/** Random Forest process. */
 	protected RunRandomForest learning = null;
-	
+
 	/** 
 	 * Object containing all the required Transitivity 
 	 * Clustering parameters (Homology detection). 
 	 */				
 	protected TransClust t = null;
-	
+
 	/** 
 	 * Object containing all the required Gecko 
 	 * parameters (island detection).
 	 */
 	protected Gecko g = null;
-	
+
 	/** 
 	 * Object containing all the required Random 
 	 * Forest parameters. 
 	 */
 	protected RandomForest rf = null;
-	
-	
+
+
+	/** Number of processors available for application. */
+	protected int processors = 1;
+
+
 	protected static List<Genome> genomes = new ArrayList<Genome>();
 	protected static ArrayList<String> clusters = new ArrayList<String>();
-	
+
 	//protected ParseTransClustResults parseTC = null;
 
 
@@ -125,6 +129,8 @@ public class PipelineSync implements Command, Cancelled {
 		this.rf = rf;			
 		// NOT using Gecko
 		this.runGecko = false;
+		// Processors
+		this.processors = ProgressPanel.getProcessors();
 	}
 
 	/**
@@ -145,6 +151,8 @@ public class PipelineSync implements Command, Cancelled {
 		this.rf = rf;		
 		// Using Gecko
 		this.runGecko = true;
+		// Processors
+		this.processors = ProgressPanel.getProcessors();
 	}
 
 	@Override
@@ -164,7 +172,7 @@ public class PipelineSync implements Command, Cancelled {
 
 		// Clean previous results (if any)
 		CommomMethods.cleanDirectories();
-		
+
 		// Global pipeline
 		// Create inner class to run tasks in the background
 		worker = new SwingWorker<Void, Void>() {
@@ -187,7 +195,7 @@ public class PipelineSync implements Command, Cancelled {
 					JOptionPane.showMessageDialog(null, info, null, JOptionPane.INFORMATION_MESSAGE);
 				}
 				checkDownloadCompletion();		
-				
+
 				// Parse
 				if (!worker.isCancelled()) {
 					logger.info("Parsing GenBank files.");	
@@ -198,25 +206,26 @@ public class PipelineSync implements Command, Cancelled {
 					DefaultTableModel genomesL2 = GenomeSelection.getLifestyleTwoTable();
 					String nameL2 = GenomeSelection.getLifestyleTwoName();
 					//
-					/*if (t.getUserTransClustFile().equals("")) {
-						parseG = new GenomeParser(genomesL1, nameL1, genomesL2, nameL2);
+					if (t.getUserTransClustFile().equals("")) {
+						parseG = new GenomeParser(genomesL1, nameL1, 
+								genomesL2, nameL2,
+								MainFrame.getGlobalParameters().getLocalDir(),
+								processors);
 					} else {
 						parseG = new GenomeWithTransClustParser(genomesL1, nameL1, 
-								genomesL2, nameL2, t.getUserTransClustFile()); */
-					String transClustTEMP = "/media/eudesbarbosa/INTENSO/DK/Computational_Biology/" +
-							"LiSSI_2015/Actinobacteria/Results/Non-Pathogens_vs._Pathogens/Gecko/Cluster_USEARCH_.75.cls";
-					parseG = new GenomeWithTransClustParser(genomesL1, nameL1, 
-							genomesL2, nameL2, transClustTEMP);
-						clusters =  ((GenomeWithTransClustParser) parseG).getClusters();
-					//}
-					parseG.exec();					
+								genomesL2, nameL2, t.getUserTransClustFile(),
+								MainFrame.getGlobalParameters().getLocalDir(),
+								processors);
+					}
+					parseG.exec();			
+					clusters =  ((GenomeWithTransClustParser) parseG).getClusters();
 					genomes = parseG.getGenomes();					
 				}
-				
-				
-				
-				
-				
+
+
+
+
+
 				// TODO : remove it
 				//-----------------------------------------------------------------//
 				String geckoTEMP = "/media/eudesbarbosa/INTENSO/DK/" +
@@ -225,10 +234,10 @@ public class PipelineSync implements Command, Cancelled {
 				learning = new RunRandomForest(rf, geckoTEMP);
 				learning.exec();
 				//-----------------------------------------------------------------//
-				
-				
-				
-				
+
+
+
+
 
 				//-----------------------------//
 				// Run Transitivity Clustering //
@@ -253,16 +262,6 @@ public class PipelineSync implements Command, Cancelled {
 								genomesL2, nameL2, clusters);
 						parseG.exec();					
 						genomes = parseG.getGenomes();
-						/*
-						long genesAnalyzed = clusters.size();
-						if (genesAnalyzed < 300000) { 
-							UpdateGenomesHashMap updated = new UpdateGenomesHashMap();
-							genomes = updated.updateGenomes(genomes, clusters);
-						} else {
-							UpdateGenomesHashMap updated = new UpdateGenomesHashMapLarge();
-							genomes = updated.updateGenomes(genomes, clusters);
-						}
-						 */
 					} else { //cluster file provided by the user
 						// View results - send TransClust object
 						ViewResults view = new ViewResults(t, clusters);
@@ -471,7 +470,7 @@ public class PipelineSync implements Command, Cancelled {
 		GenomeSelection.enableSelectionOptions(b);
 		GenomeLoader.enableSelectionOptions(b);
 	}
-	
+
 	/**
 	 * @return	Returns status of the process. False 
 	 * 			if it was cancelled; and True, otherwise.
@@ -480,8 +479,8 @@ public class PipelineSync implements Command, Cancelled {
 		return processInterrupted;
 	}
 
-	
-	
+
+
 	/**
 	 * Clean up the database before closing 
 	 * the application.

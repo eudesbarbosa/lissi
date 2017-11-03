@@ -14,7 +14,7 @@
  * Horizonte, Brazil). For more information please access:
  * 
  *      	https://lissi.compbio.sdu.dk/ 
-*/
+ */
 package dk.sdu.imada.methods.genome;
 
 import java.io.File;
@@ -23,14 +23,13 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -56,10 +55,10 @@ public class GenomeParser extends AbstractGenomeParser implements Command, Cance
 	private static final Logger logger = LogManager.getLogger(GenomeParser.class.getName());
 
 	/** Lifestyle one genomes. */
-	protected Map<String, File> genomesL1;
+	protected DefaultTableModel genomesL1;
 
 	/** Lifestyle two genomes. */
-	protected Map<String, File> genomesL2;
+	protected DefaultTableModel genomesL2;
 
 	/** Lifestyle one name. */
 	protected String nameL1;
@@ -97,16 +96,16 @@ public class GenomeParser extends AbstractGenomeParser implements Command, Cance
 	/** 
 	 * Parses a GenBank file and retrieve the relevant information. 
 	 * 
-	 * @param genomesL1		Map with lifestyle one genomes.
+	 * @param genomesL1		Table with lifestyle one genomes.
 	 * @param nameL1		Name of lifestyle one.
-	 * @param genomesL2 	Map with lifestyle two genomes.
+	 * @param genomesL2 	Table with lifestyle two genomes.
 	 * @param nameL2		Name of lifestyle two.
 	 * @param localDir		Path to local working directory.
 	 * @param processors	Number of available processors 
 	 * 						(multi-thread).
 	 */
-	public GenomeParser(Map<String, File> genomesL1, String nameL1, 
-			Map<String, File> genomesL2, String nameL2, 
+	public GenomeParser(DefaultTableModel genomesL1, String nameL1, 
+			DefaultTableModel genomesL2, String nameL2, 
 			String localDir, int processors) {
 		// Get working directory
 		this.workingDir = localDir;
@@ -139,27 +138,28 @@ public class GenomeParser extends AbstractGenomeParser implements Command, Cance
 
 	@Override
 	public void exec() {
+		// Get GenBank files location //
+		// ... for lifestyle one			
+		List<Entry<File, String>> listFiles = new ArrayList<Entry<File, String>>();
+		String file = "";
+		int rows = genomesL1.getRowCount();
+		for (int i = 0; i < rows; i++) {
+			file = genomesL1.getValueAt(i, 2).toString();
+			listFiles.add(new AbstractMap.SimpleEntry<File, String>(new File(file), nameL1));
+		}
+		// ... for lifestyle two
+		rows = genomesL2.getRowCount();
+		for (int i = 0; i < rows; i++) {
+			file = genomesL2.getValueAt(i, 2).toString();
+			listFiles.add(new AbstractMap.SimpleEntry<File, String>(new File(file), nameL2));
+		}
 
 		// Check if multi-thread
 		if (this.threads > 1) {
-
 			// Prepare tasks
 			concurrentSeqAA = new ConcurrentLinkedQueue<ProteinSequence>();
 			executor = new ExecutorServiceUnbounded(threads);			
-			
-			// Get GenBank files location //
-			// ... for lifestyle one			
-			Set<Entry<String, File>> set = genomesL1.entrySet();
-			List<Entry<File, String>> listFiles = new ArrayList<Entry<File, String>>();
-			for (Entry<String, File> entry : set) {
-				listFiles.add(new AbstractMap.SimpleEntry<File, String>(entry.getValue(), nameL1));
-			}
-			// ... for lifestyle two
-			set = genomesL2.entrySet();
-			for (Entry<String, File> entry : set) {
-				listFiles.add(new AbstractMap.SimpleEntry<File, String>(entry.getValue(), nameL2));
-			}
-			
+
 			// Number of genomes
 			int numGenomes = listFiles.size();
 			int perThread  = (int) Math.ceil(numGenomes/threads+1);
@@ -173,39 +173,15 @@ public class GenomeParser extends AbstractGenomeParser implements Command, Cance
 				Runnable task = createRunnable(list);
 				executor.addTask(task);					
 			}
-			
+
 		} else {
+			// Extract sequences
 			ArrayList<ProteinSequence> seqAA = new ArrayList<>();
-
-			// ... for lifestyle one
-			Iterator<Entry<String, File>> it = genomesL1.entrySet().iterator();
+			Iterator<Entry<File, String>> it = listFiles.listIterator();
 			while (it.hasNext()) {
-				//String line = "";
-				//
-				Map.Entry<String, File> pair = (Map.Entry<String, File>)it.next();
-				//line = pair.getValue() + " \t " + nameL1;
+				Entry<File, String> pair = it.next();
 				try {
-					seqAA.addAll(parse( pair.getValue(), this.nameL1));
-				} catch (Exception e) {
-					String errorMsg = "Error while parsing GenBank files.";
-					logger.error(errorMsg);
-					try {
-						throw new BrokePipelineException(errorMsg, e);
-					} catch (BrokePipelineException e1) {
-						e1.printStackTrace();
-					}	
-				}
-				//		        
-				it.remove(); // avoids a ConcurrentModificationException
-			}
-
-			// ... for lifestyle two
-			it = genomesL2.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry<String, File> pair = (Map.Entry<String, File>)it.next();
-				//line = pair.getValue() + " \t " + nameL1;
-				try {
-					seqAA.addAll(parse(pair.getValue(), this.nameL2));
+					seqAA.addAll(parse(pair.getKey(), pair.getValue()));
 				} catch (Exception e) {
 					String errorMsg = "Error while parsing GenBank files.";
 					logger.error(errorMsg);

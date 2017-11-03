@@ -695,8 +695,8 @@ final public class GenomeSelection extends AbstractGenomeSelection {
 						boolean check = checkForDownload();
 						if (check) { // Download
 							PipelineSync.setDownloadComplete(false);
-							DownloadGenomes download = new DownloadGenomes();
-							download.exec();
+							//DownloadGenomes download = new DownloadGenomes();
+							//download.exec();
 							selectionDone = true;
 						} else { // Move on to TransClust
 							// Set download as incomplete
